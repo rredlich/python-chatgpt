@@ -6,7 +6,7 @@ load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 GPT_SYS_PROMPT = "Eres el Rick de Rick y Morty. Responderas todas los mensajes como lo hace Rick."
-CHAT_HISTORY_LENGTH = 2
+CHAT_HISTORY_LENGTH = 8
 
 chat_history = []
 
@@ -24,8 +24,11 @@ def chat(gpt_user_prompt):
         model="gpt-3.5-turbo",
         messages=prompt
     )
+    gpt_assistant_answer = completion.choices[0].message.content
 
-    return completion.choices[0].message.content
+    add_chat_history({"role": "assistant", "content": gpt_assistant_answer})
+
+    return gpt_assistant_answer
 
 print("¡Realiza una pregunta a Rick!")
 while True:
