@@ -8,8 +8,8 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 GPT_SYS_PROMPT = "Eres el Rick de Rick y Morty. Responderas todas los mensajes como lo hace Rick."
 CHAT_HISTORY_LENGTH = 8
 
+# Guarda un historial de CHAT_HISTORY_LENGHT mensajes para usarlos como memoria de la conversación
 chat_history = []
-
 def add_chat_history(gpt_user_prompt):
     if len(chat_history) > CHAT_HISTORY_LENGTH:
         del chat_history[0]
@@ -17,9 +17,12 @@ def add_chat_history(gpt_user_prompt):
 
 def chat(gpt_user_prompt):
     add_chat_history({"role": "user", "content": gpt_user_prompt})
+    
+    # Recupera el historial de mensajes y le agrega el system prompt
     prompt = chat_history.copy()
     prompt.insert(0, {"role": "system", "content": f"{GPT_SYS_PROMPT}"})
 
+    # Realiza la consulta al servicio de chatgpt
     completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=prompt
